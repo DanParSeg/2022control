@@ -1,0 +1,58 @@
+
+
+%1 operating points
+%para puntos de equilibro tenemos que poner la f a 0
+syms x2 x3 x4 u
+l=4;
+mc=5;
+mr=1;
+g=9.81;
+
+%dx=[x3;
+%    x4;
+%    -mr*sin(x2)*(l*x4*x4-g*cos(x2))+u;
+%    sin(x2)*((mc+mr)*g-mr*l*x4*x4*cos(x2))+u*(cos(x2));
+%];
+
+dx=[x3;
+    x4;
+    (-mr*sin(x2)*(l*x4*x4-g*cos(x2)))/(mc+mr*sin(x2)*sin(x2))+u*(1/(mc+mr*sin(x2)*sin(x2)));
+    (sin(x2)*((mc+mr)*g-mr*l*x4*x4*cos(x2)))/(mc+mr*sin(x2)*sin(x2))+u*(cos(x2)/l*(mc+mr*sin(x2)*sin(x2)));
+];
+
+
+%no ponemos x1 porque es la posicion del carro
+S = solve(dx(1)==0,dx(2)==0,dx(3)==0,dx(4)==0,x2,x3,x4,u,'Real',true);
+
+%obtenemos la solucion [u,x2]=[0,0] y [0,pi]
+Su=S.u
+Sx2=S.x2
+
+%pause(100)
+
+%linearize
+%elegimos la posicion up x=[0,0,0,0] u=0
+% derivadas parciales y sustituir puntos de equilibrio
+clear all
+close all
+clc
+
+%syms l mc mr g x1 x2 x3 x4 u
+syms x1 x2 x3 x4 u
+
+mr=1
+mc=5
+l=4
+g=9.81
+
+dx=[x3;
+    x4;
+    (-mr*sin(x2)*(l*x4*x4-g*cos(x2)))/(mc+mr*sin(x2)*sin(x2))+u*(1/(mc+mr*sin(x2)*sin(x2)));
+    (sin(x2)*((mc+mr)*g-mr*l*x4*x4*cos(x2)))/(mc+mr*sin(x2)*sin(x2))+u*(cos(x2)/l*(mc+mr*sin(x2)*sin(x2)));
+];
+
+A=jacobian(dx,[x1;x2;x3;x4]);
+B=jacobian(dx,u);
+
+subs(A,dx,[0;0;0;0])
+subs(B,dx,[0;0;0;0])
