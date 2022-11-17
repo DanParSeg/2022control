@@ -1,22 +1,17 @@
-% Calculate all the operating points of the system 
-% explain the obtained result.
+syms J m d g x1 x2 x3 x4 x5 x6 u1 u2
+A=[x4;x5;x6;0;-g;0]
 
+B=[0 0;
+   0 0;
+   0 0;
+   -sin(x3)/m 0;
+   cos(x3)/m 0;
+   0 2*d/J]
 
-%1 operating points
-%hacia abajo o hacia arriba
-%seria [0;0;0;0] y [0,pi;0;0]
-%para puntos de equilibro tenemos que poner la f a 0
-syms x2 x3 x4 u
-l=4
-mc=5
-mr=1
-g=9.81
+u=[u1;u2];
+dx=A+B*u;
 
-%no ponemos x1 porque es la posicion del carro
-S = solve(==0,x2,x3,x4,u,'Real',true)
+S = solve(dx(1)==0,dx(2)==0,dx(3)==0,dx(4)==0,dx(5)==0,dx(6)==0,x1,x2,x3,x4,x5,x6,u1,u2,'Real',true);
 
-Su=s.u
-Sx2=S.x2
-
-%linearize
-%elegimos el de arriba, 0,0,0,0
+Su=[S.u1;S.u2]
+Sx=[S.x1;S.x2;S.x3;S.x4;S.x5;S.x6]

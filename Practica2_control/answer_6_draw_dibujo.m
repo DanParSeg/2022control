@@ -2,7 +2,7 @@ function f(x)
     clf();
     hold on;
     axis square;
-    axis([-10,10,-10,10]*1)
+    axis([-10,10,0,20]*1.5)
     
     x_coor=x(1);
     y_coor=x(2);

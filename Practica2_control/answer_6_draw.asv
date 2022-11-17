@@ -1,0 +1,17 @@
+%
+
+function f(t,x,u)
+%function f()
+    %plot(t,x(1),'k--.')
+    u(1)/10000
+    u(2)
+    plot(t,x(1),'r--.')
+    plot(t,x(2),'g--.')
+    plot(t,x(3),'b--.')
+    plot(t,x(4),'c--.')
+    plot(t,x(5),'m--.')
+    plot(t,x(6),'y--.')
+    plot(t,u(1),'k--.')
+    plot(t,u(2),'w--.')
+    legend('x','y','theta','dx','dy','dtheta','u1','u2')
+end

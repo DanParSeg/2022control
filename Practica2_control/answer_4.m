@@ -1,23 +1,20 @@
-%Find the operating point that corresponds to u1 = mg, u2 = 0.
-% Linearize the system around this operating point.
+syms J m d g x1 x2 x3 x4 x5 x6 u1 u2
 
+A=[x4;x5;x6;-u1*(sin(x3)/m);-g+u1*(cos(x3))/m;0];
 
+B=[0 0;
+   0 0;
+   0 0;
+   -sin(x3)/m 0;
+   cos(x3)/m 0;
+   0 2*d/J];
 
-%1 operating points
-%hacia abajo o hacia arriba
-%seria [0;0;0;0] y [0,pi;0;0]
-%para puntos de equilibro tenemos que poner la f a 0
-syms x2 x3 x4 u
-l=4
-mc=5
-mr=1
-g=9.81
+u=[u1;u2];
 
-%no ponemos x1 porque es la posicion del carro
-S = solve(==0,x2,x3,x4,u,'Real',true)
+dx=A+B*u;
 
-Su=s.u
-Sx2=S.x2
+A = jacobian(dx,[x1;x2;x3;x4;x5;x6]);
+B = jacobian(dx,[u1;u2]);
 
-%linearize
-%elegimos el de arriba, 0,0,0,0
+A=subs(A,[x1 x2 x3 x4 x5 x6], [0 0 0 0 0 0])
+B=subs(B,[x1 x2 x3 x4 x5 x6], [0 0 0 0 0 0])

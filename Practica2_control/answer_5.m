@@ -1,22 +1,27 @@
 % Is the linearized system controllable using both control inputs u1 and u2?
 % Is the linearized system controllable using only the control input u1?
 
+m=30000;
+d=5.5;
+g=9.81;
+J=10000;
+u1_A=m*g;
 
-%1 operating points
-%hacia abajo o hacia arriba
-%seria [0;0;0;0] y [0,pi;0;0]
-%para puntos de equilibro tenemos que poner la f a 0
-syms x2 x3 x4 u
-l=4
-mc=5
-mr=1
-g=9.81
+A=[0 0 0 1 0 0;
+   0 0 0 0 1 0;
+   0 0 0 0 0 1;
+   0 0 -u1_A/m 0 0 0;
+   0 0 0 0 0 0;
+   0 0 0 0 0 0];
 
-%no ponemos x1 porque es la posicion del carro
-S = solve(==0,x2,x3,x4,u,'Real',true)
+B=[0 0;0 0;0 0;0 0;1/m 0; 0 2*d/J];
 
-Su=s.u
-Sx2=S.x2
+B_without_u2=[0 0;0 0;0 0;0 0;1/m 0; 0 0];
 
-%linearize
-%elegimos el de arriba, 0,0,0,0
+Co=ctrb(A,B);
+
+uncontrollable_states = length(A) - rank(Co)
+
+Co=ctrb(A,B_without_u2);
+
+uncontrollable_states = length(A) - rank(Co)

@@ -1,6 +1,5 @@
 
 function  xdot  = f(x,u)
-    
-    xdot=[x(2); u-sin(x(1))-x(2)]
+    xdot=answer_6_f(x,u);
 end
 
