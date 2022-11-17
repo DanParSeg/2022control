@@ -45,3 +45,8 @@ B = jacobian([f1,f2,f3,f4],u)
 subs(A,[x1 x2 x3 x4], [0 0 0 0])
 subs(B,[x1 x2 x3 x4], [0 0 0 0])
 
+%output feedback controller, poles in -2
+clear all
+close all
+clc
+

@@ -8,13 +8,19 @@
 %the relevant state and control variables and by a graphical animation.
 
 
-init;
+e6p6_init;
+
+mr=1;
+mc=5;
+l=4;
+g=9.81;
+
 x=[0;0;0;0]; % Initial state
 
 A=[ 0,                  0, 1, 0;
     0,                  0, 0, 1;
     0,          (g*mr)/mc, 0, 0;
-    0, (g*mc*(mc + mr))/l, 0, 0;
+    0, (g*(mc + mr))/(l*mc), 0, 0;
 ];
 
 B=[0;
@@ -24,15 +30,27 @@ B=[0;
 ];
 C=[0,0,0,0]
 
-k=[2 1] %To calculate K, we solve: det(sI − A + BK) = (s + 1)2
+pcontrol=[-2 -2.1 -2.2 -2.3]
+E=[1 0 0 0]%seleccionamos el estado que queremos controlar
+K=place(A,B,pcontrol)
+H=-inv(E*inv(A-B*K)*B)
 
 dt=0.01;
 frame_counter=0;
 t=0;
 for t=0:dt:10
-    u=-k(1)*x(1) - k(2)*x(2) + 2*pi %control
+    w=square(0.5*t) %setpoint, hacia donde queremos que vaya el sistema
+    u_bar=0%el estado al que tiende u cuando esta en equilibrio
+    w_bar=0%
+    x_bar=[0;0;0;0]%el estado de equilibrio
+    %definicion de u con w y w_bar
+    %u=u_bar-K*(x-x_bar)+H*(w-w_bar)
     
-    x=x+e_6p4_f(x,u)*dt % Euler x
+    %definicion de u con x_desired
+    x_des=[w;0;0;0]
+    u=u_bar-K*(x-x_des)
+
+    x=x+e6p6_f(x,u)*dt % Euler x
     %x=x+dt*(0.25*e_5p7_f(x,u)+0.75*(e_5p7_f(x+dt*(2/3)*e_5p7_f(x,u),u))); % Runge-Kutta
     
     pause(dt);
@@ -40,13 +58,13 @@ for t=0:dt:10
     
     % Frame sampling
     if frame_counter == 0
-       %e_6p4_draw(t,x,u);
+       %e6p6_draw(t,x,u,w);
        pendulum_draw(x);
     end
 
-    frame_counter =frame_counter+1
+    frame_counter =frame_counter+1;
 
-    if frame_counter == 1
+    if frame_counter == 5
         frame_counter=0
     end
 end;

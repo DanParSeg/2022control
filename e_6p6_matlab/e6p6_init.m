@@ -9,10 +9,10 @@ figure%('Position',[0 0 size(3)/2 size(4)/2]);
 hold
 grid
 % set(gca,'FontSize',12);
-xmin=-1;
+xmin=0;
 xmax=10;
 ymin=-1.5
-ymax=4;
+ymax=1.5;
 
 axis([xmin xmax ymin ymax]);
 
