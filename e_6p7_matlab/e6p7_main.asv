@@ -1,0 +1,73 @@
+%e6p7_init;
+
+mr=1;
+mc=5;
+l=1;
+g=9.81;
+
+x=[500;0;0;0]; % Initial state
+
+A=[ 0,                  0, 1, 0;
+    0,                  0, 0, 1;
+    0,          (g*mr)/mc, 0, 0;
+    0, (g*(mc + mr))/(l*mc), 0, 0;
+];
+
+B=[0;
+   0;
+   1/mc;
+   1/(l*mc);
+];
+C=[0,0,0,0]
+
+E=[1 0 0 0]%seleccionamos el estado que queremos controlar
+%pole placement
+pcontrol=[-2 -2.1 -2.2 -2.3]
+K=place(A,B,pcontrol)
+%apartado 1: Q:3,1,1,1 R=7
+%apartado 3: Q:3,1,1,1 R=0.00001
+%apartado 4: Q:3,1,1,1 R=1
+%LQR
+Q=[3 0 0 0;
+   0 1 0 0;
+   0 0 1 0;
+   0 0 0 1];%dimensiones de x, premia el tiempo, controlador brusco
+R=[1];%dimensiones de u, eficiencia energetica, controlador perezoso
+K=lqr(A,B,Q,R,0);
+
+H=-inv(E*inv(A-B*K)*B)
+
+dt=0.01;
+frame_counter=0;
+t=0;
+for t=0:dt:20
+    w=0
+    % w=square(0.5*t) %setpoint, hacia donde queremos que vaya el sistema
+    u_bar=0%el estado al que tiende u cuando esta en equilibrio
+    w_bar=0%
+    x_bar=[0;0;0;0]%el estado de equilibrio
+    %definicion de u con w y w_bar
+    %u=u_bar-K*(x-x_bar)+H*(w-w_bar)
+    
+    %definicion de u con x_desired
+    x_des=[w;0;0;0]
+    u=u_bar-K*(x-x_des)
+
+    x=x+e6p7_f(x,u)*dt % Euler x
+    %x=x+dt*(0.25*e_5p7_f(x,u)+0.75*(e_5p7_f(x+dt*(2/3)*e_5p7_f(x,u),u))); % Runge-Kutta
+    
+    % Frame sampling
+    if frame_counter == 0
+       %e6p7_draw(t,x,u,w);
+       pendulum_draw(x);
+       pause(0.000000000000000000001);
+    end
+
+    frame_counter =frame_counter+1;
+
+    if frame_counter == 5
+        frame_counter=0
+    end
+end;
+
+
