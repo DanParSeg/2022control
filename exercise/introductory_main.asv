@@ -1,0 +1,29 @@
+%Adapted from https://www.ensta-bretagne.fr/jaulin/
+
+init;
+
+%For this system, the state is x =(x1,x2)
+
+x=[0;0]; % Initial state
+
+dt=0.01;
+
+frame_counter=0;
+
+t=0;
+
+k=[0.5 3.5]
+
+for t=0:dt:5
+    u=0;
+    x=x+f(x,u)*dt;
+    %pause(dt);
+    frame_counter =frame_counter+1;
+    % Frame sampling
+    if frame_counter == 15
+       draw(t,x);
+       pause(0.00000001);
+       frame_counter =0;
+    end
+end;
+
